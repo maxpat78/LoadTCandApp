@@ -1,7 +1,6 @@
 //
 // Usa: LoadTCandAPP Volume.tc Int
 //
-//
 
 #define UNICODE
 #define LOGGER
@@ -52,12 +51,14 @@ typedef struct
 static LPWSTR wsProcesses[3] = {
    L"C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe", // 0
    L"C:\\Program Files (x86)\\Mozilla Thunderbird\\thunderbird.exe", // 1
+   L"C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe", // 2
 };
 
 
 static LPWSTR wsProfiles[3] = {
    L" -profile _:\\firefox", // 0
    L" -profile _:\\thunderbird", // 1
+   L" --user-data-dir=\"_:\\chrome\"", // 2
 };
 
 
@@ -202,7 +203,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 
         LPWSTR Args;
         Args = StrDup(wsProfiles[wParam]);
-        Args[10] = td.DriveLetter;
+        //~ Args[10] = td.DriveLetter;
+        *(wcschr(Args, L'_')) = td.DriveLetter;
 
         if (! CreateProcess(wsProcesses[wParam], Args, 0, 0, 0, 0, 0, 0, &si, &pi))
         {
